@@ -10,10 +10,10 @@ def command_line_arguments():
     """Read and evaluate commandline arguments, returns the single commandline argument"""
 
     try:
-        parser = argparse.ArgumentParser( description='Log Handler/Cleaner/Copier for Idemia DocAuth' )
+        parser = argparse.ArgumentParser(description='Log Handler/Cleaner/Copier for Idemia DocAuth')
 
         # Add required arguments.
-        parser.add_argument( 'action', choices=['clean', 'download'], type=str, help='clean or download' )
+        parser.add_argument('action', choices=['clean', 'download'], type=str, help='clean or download')
 
         # Parse the arguments
         args = parser.parse_args()
@@ -44,11 +44,10 @@ def cleaner():
     """ Remove log files """
 
     # Get recursive lists of file paths that matches pattern including sub directories
-    file_list1 = glob.glob(r'/Program Files/IDEMIA/*.log*', recursive=True)
+    file_list1 = glob.glob(r'/Program Files/IDEMIA/**/*.log*', recursive=True)
     file_list2 = glob.glob(r'/STIP/*.log*', recursive=False)
     file_list3 = glob.glob(r'/ECAT/BioFDRS/*.log*', recursive=False)
     file_list = file_list1 + file_list2 + file_list3
-    #print("FILE LIST: ", file_list)
 
     # Iterate over the list of filepaths & remove each file.
     for filePath in file_list:
@@ -69,7 +68,7 @@ def download():
 
     clear_destination()  # Remove existing .log \files in the destination
 
-    file_list1 = glob.glob(r'/Program Files/IDEMIA/*.log*', recursive=True)
+    file_list1 = glob.glob(r'/Program Files/IDEMIA/**/*.log*', recursive=True)
     file_list2 = glob.glob(r'/STIP/*.log*', recursive=False)
     file_list3 = glob.glob(r'/ECAT/BioFDRS/*.log*', recursive=False)
     file_list = file_list1 + file_list2 + file_list3
