@@ -52,10 +52,12 @@ def cleaner():
 
     # Iterate over the list of filepaths & remove each file.
     for filePath in file_list:
+        filePath = os.path.normpath(filePath)  # Reorient path slashes for Windows
+        print("File is: ", filePath)
         try:
             os.remove(filePath)
-        except OSError:
-            print("Error while deleting file")
+        except OSError as e:
+            print("Failed with:", e.strerror)  # look what it says
 
     return file_list
 
