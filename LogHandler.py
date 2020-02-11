@@ -39,22 +39,30 @@ def clear_destination():
 
     return
 
+def find_logs():
+    # Get recursive lists of file paths that matches pattern including sub directories
+
+    file_list1 = glob.glob(r'/Program Files/IDEMIA/MFace Flex IAP/log/*.log*', recursive=False)
+    file_list2 = glob.glob(r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*', recursive=False)
+    file_list3 = glob.glob(r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*', recursive=False)
+    file_list4 = glob.glob(r'/STIP/*.log*', recursive=False)
+    file_list5 = glob.glob(r'/ECAT/BioFDRS/*.xml*', recursive=False)
+
+    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5
+
+    return file_list
 
 def cleaner():
     """ Remove log files """
 
-    # Get recursive lists of file paths that matches pattern including sub directories
-    file_list1 = glob.glob(r'/Program Files/IDEMIA/**/*.log*', recursive=True)
-    file_list2 = glob.glob(r'/STIP/*.log*', recursive=False)
-    file_list3 = glob.glob(r'/ECAT/BioFDRS/*.log*', recursive=False)
-    file_list = file_list1 + file_list2 + file_list3
+    file_list = find_logs()
 
     # Iterate over the list of filepaths & remove each file.
-    for filePath in file_list:
-        filePath = os.path.normpath(filePath)  # Reorient path slashes for Windows
-        print("File is: ", filePath)
+    for file_path in file_list:
+        file_path = os.path.normpath(file_path)  # Reorient path slashes for Windows
+        print("File is: ", file_path)
         try:
-            os.remove(filePath)
+            os.remove(file_path)
         except OSError as e:
             print("Failed with:", e.strerror)  # look what it says
 
@@ -68,10 +76,7 @@ def download():
 
     clear_destination()  # Remove existing .log \files in the destination
 
-    file_list1 = glob.glob(r'/Program Files/IDEMIA/**/*.log*', recursive=True)
-    file_list2 = glob.glob(r'/STIP/*.log*', recursive=False)
-    file_list3 = glob.glob(r'/ECAT/BioFDRS/*.log*', recursive=False)
-    file_list = file_list1 + file_list2 + file_list3
+    file_list = find_logs()
 
     print("\nDownloading files:", )
     for file_name in file_list:
