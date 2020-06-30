@@ -48,7 +48,11 @@ def find_logs():
     file_list4 = glob.glob(r'/STIP/*.log*', recursive=False)
     file_list5 = glob.glob(r'/ECAT/BioFDRS/*.xml*', recursive=False)
 
-    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5
+    file_list6 = glob.glob(r'/Program Files/IDEMIA/Cameras/First/*.log*')  #For copying need create separate folders
+    file_list7 = glob.glob(r'/Program Files/IDEMIA/Cameras/Second/*.log*')  #For copying need create separate folders
+
+    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
+    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
 
     return file_list
 
