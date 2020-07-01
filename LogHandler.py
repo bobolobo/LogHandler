@@ -51,7 +51,7 @@ def find_logs():
     file_list6 = glob.glob(r'/Program Files/IDEMIA/Cameras/First/*.log*')  #For copying need create separate folders
     file_list7 = glob.glob(r'/Program Files/IDEMIA/Cameras/Second/*.log*')  #For copying need create separate folders
 
-    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
+    # file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5
     file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
 
     return file_list
@@ -72,20 +72,23 @@ def cleaner():
 
     return file_list
 
-
 def download():
     """ Download log files to D: USB stick """
 
-    dest = r'd:/temp'
+    destroot = r'D:\temp'
 
     clear_destination()  # Remove existing .log \files in the destination
 
     file_list = find_logs()
 
     print("\nDownloading files:", )
-    for file_name in file_list:
-        shutil.copy(file_name, dest)
-        print(file_name)
+    for full_file_name in file_list:
+        path_name = os.path.dirname(full_file_name)
+        path_name = path_name.lstrip(r'/')
+        destpath = os.path.join(destroot, path_name)
+        os.makedirs(destpath, exist_ok=True)
+        shutil.copy(full_file_name, destpath)
+        print(full_file_name)
     return
 
 
