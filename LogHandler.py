@@ -4,6 +4,7 @@ from os import listdir
 import re
 import glob
 import shutil
+import pathlib
 
 
 destroot = r'D:\temp\LOGCAPTURE'
@@ -35,23 +36,27 @@ def clear_destination():
     try:
         shutil.rmtree(destroot)  # Completely remove destination folder
     except OSError as e:
-        print( "Failed with:", e.strerror )  # look what it says
+        print("Failed with:", e.strerror)  # look what it says
 
     return
 
 def find_logs():
-    # Get recursive lists of file paths that matches pattern including sub directories
+    """ Get lists of file paths that matches pattern """
 
-    file_list1 = glob.glob(r'/Program Files/IDEMIA/MFace Flex IAP/log/*.log*', recursive=False)
-    file_list2 = glob.glob(r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*', recursive=False)
-    file_list3 = glob.glob(r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*', recursive=False)
-    file_list4 = glob.glob(r'/STIP/*.log*', recursive=False)
-    file_list5 = glob.glob(r'/ECAT/BioFDRS/*.xml*', recursive=False)
+    file_list_targets = [r'/Program Files/IDEMIA/MFace Flex IAP/log/*.log*',
+                 r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*',
+                 r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*',
+                 r'/STIP/*.log*',
+                 r'/ECAT/BioFDRS/*.xml*',
+                 r'/Program Files/IDEMIA/Cameras/First/*.log*',
+                 r'/Program Files/IDEMIA/Cameras/Second/*.log*']
 
-    file_list6 = glob.glob(r'/Program Files/IDEMIA/Cameras/First/*.log*')
-    file_list7 = glob.glob(r'/Program Files/IDEMIA/Cameras/Second/*.log*')
+    file_lists_of_lists = [glob.glob(i, recursive=False) for i in file_list_targets]
 
-    file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
+    # Flatten out the list of lists into one list
+    file_list = []
+    for i in file_lists_of_lists:
+        file_list.extend(i)
 
     return file_list
 
@@ -62,6 +67,7 @@ def cleaner():
 
     # Iterate over the list of filepaths & remove each file.
     for file_path in file_list:
+
         file_path = os.path.normpath(file_path)  # Reorient path slashes for Windows
         print("File is: ", file_path)
         try:
@@ -74,9 +80,7 @@ def cleaner():
 def download():
     """ Download log files to D: USB stick """
 
-    # destroot = r'D:\temp\LOGCAPTURE'
-
-    clear_destination()  # Remove existing .log \files in the destination
+    clear_destination()  # Remove existing .log files in the destination
 
     file_list = find_logs()
 
@@ -89,7 +93,8 @@ def download():
         os.makedirs(destpath, exist_ok=True)
         shutil.copy(full_file_name, destpath)
         print(full_file_name)
-    print("\nFiles downloaded to (" + destroot + ") and also remain on server.")
+    print("\n" + str(len(file_list)) + " files downloaded to (" + destroot + ") also remaining on server.")
+    print("To delete the log files on the server, run: " + __file__ + " clean")
     return
 
 
