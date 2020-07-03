@@ -1,10 +1,10 @@
 import argparse
 import os
-from os import listdir
-import re
+# from os import listdir
+# import re
 import glob
 import shutil
-import pathlib
+# import pathlib
 
 
 destroot = r'D:\temp\LOGCAPTURE'
@@ -44,12 +44,12 @@ def find_logs():
     """ Get lists of file paths that matches pattern """
 
     file_list_targets = [r'/Program Files/IDEMIA/MFace Flex IAP/log/*.log*',
-                 r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*',
-                 r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*',
-                 r'/STIP/*.log*',
-                 r'/ECAT/BioFDRS/*.xml*',
-                 r'/Program Files/IDEMIA/Cameras/First/*.log*',
-                 r'/Program Files/IDEMIA/Cameras/Second/*.log*']
+                         r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*',
+                         r'/STIP/*.log*',
+                         r'/ECAT/BioFDRS/*.xml*',
+                         r'/Program Files/IDEMIA/Cameras/First/*.log*',
+                         r'/Program Files/IDEMIA/Cameras/Second/*.log*']
 
     file_lists_of_lists = [glob.glob(i, recursive=False) for i in file_list_targets]
 
