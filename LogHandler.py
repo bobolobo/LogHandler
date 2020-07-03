@@ -6,6 +6,9 @@ import glob
 import shutil
 
 
+destroot = r'D:\temp\LOGCAPTURE'
+
+
 def command_line_arguments():
     """Read and evaluate commandline arguments, returns the single commandline argument"""
 
@@ -27,15 +30,12 @@ def command_line_arguments():
 def clear_destination():
     """ In the destination drive/folder, remove all existing .log files """
 
-    folder_path = r'd:/TEMP/'
+    print("Removing existing destination: ", destroot)
 
-    print("Removing existing files in destination: ")
-
-    for file_name in listdir(folder_path):
-        if re.search(".log*", file_name):
-            real_path = os.path.join(folder_path, file_name)
-            os.remove(real_path)
-            print(real_path)
+    try:
+        shutil.rmtree(destroot)  # Completely remove destination folder
+    except OSError as e:
+        print( "Failed with:", e.strerror )  # look what it says
 
     return
 
@@ -48,10 +48,9 @@ def find_logs():
     file_list4 = glob.glob(r'/STIP/*.log*', recursive=False)
     file_list5 = glob.glob(r'/ECAT/BioFDRS/*.xml*', recursive=False)
 
-    file_list6 = glob.glob(r'/Program Files/IDEMIA/Cameras/First/*.log*')  #For copying need create separate folders
-    file_list7 = glob.glob(r'/Program Files/IDEMIA/Cameras/Second/*.log*')  #For copying need create separate folders
+    file_list6 = glob.glob(r'/Program Files/IDEMIA/Cameras/First/*.log*')
+    file_list7 = glob.glob(r'/Program Files/IDEMIA/Cameras/Second/*.log*')
 
-    # file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5
     file_list = file_list1 + file_list2 + file_list3 + file_list4 + file_list5 + file_list6 + file_list7
 
     return file_list
@@ -75,7 +74,7 @@ def cleaner():
 def download():
     """ Download log files to D: USB stick """
 
-    destroot = r'D:\temp'
+    # destroot = r'D:\temp\LOGCAPTURE'
 
     clear_destination()  # Remove existing .log \files in the destination
 
@@ -83,12 +82,14 @@ def download():
 
     print("\nDownloading files:", )
     for full_file_name in file_list:
+        full_file_name = os.path.normpath(full_file_name)
         path_name = os.path.dirname(full_file_name)
-        path_name = path_name.lstrip(r'/')
+        path_name = path_name.lstrip(r'\\')
         destpath = os.path.join(destroot, path_name)
         os.makedirs(destpath, exist_ok=True)
         shutil.copy(full_file_name, destpath)
         print(full_file_name)
+    print("\nFiles downloaded to (" + destroot + ") and also remain on server.")
     return
 
 
