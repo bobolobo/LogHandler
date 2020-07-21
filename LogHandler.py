@@ -34,7 +34,7 @@ def clear_destination():
     print("Removing existing destination: ", destroot)
 
     try:
-        shutil.rmtree(destroot)  # Completely remove destination folder
+        shutil.rmtree(destroot, ignore_errors=True)  # Completely remove destination folder
     except OSError as e:
         print("Failed with:", e.strerror)  # look what it says
 
