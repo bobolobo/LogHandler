@@ -7,7 +7,7 @@ import shutil
 # import pathlib
 
 
-destroot = r'D:\temp\LOGCAPTURE'
+destroot = r'D:\Temp\LOGCAPTURE'
 
 
 def command_line_arguments():
