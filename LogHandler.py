@@ -65,15 +65,23 @@ def cleaner():
 
     file_list = find_logs()
 
+    print("\nRemoving the following log files from server: \n")
+    file_count = 0
+
     # Iterate over the list of filepaths & remove each file.
     for file_path in file_list:
 
         file_path = os.path.normpath(file_path)  # Reorient path slashes for Windows
-        print("File is: ", file_path)
+        print("Removing: ", file_path)
+
         try:
             os.remove(file_path)
+            file_count += 1
         except OSError as e:
             print("Failed with:", e.strerror)  # look what it says
+            # file_count -= 1
+
+    print("\nRemoved a total of " + str(file_count) + " files from the server.")
 
     return file_list
 
@@ -84,7 +92,7 @@ def download():
 
     file_list = find_logs()
 
-    print("\nDownloading files:", )
+    print("\nDownloading files to destination:", )
     for full_file_name in file_list:
         full_file_name = os.path.normpath(full_file_name)
         path_name = os.path.dirname(full_file_name)
