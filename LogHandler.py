@@ -1,13 +1,12 @@
 import argparse
-import os
-# from os import listdir
-# import re
 import glob
 import shutil
-# import pathlib
+import os
+import win32api
+import win32file
+import re
 
-
-destroot = r'D:\Temp\LOGCAPTURE'
+# global destroot
 
 
 def command_line_arguments():
@@ -28,7 +27,8 @@ def command_line_arguments():
         print(err)
         return
 
-def clear_destination():
+
+def clear_destination(destroot):
     """ In the destination drive/folder, remove all existing .log files """
 
     print("Removing existing destination: ", destroot)
@@ -39,6 +39,55 @@ def clear_destination():
         print("Failed with:", e.strerror)  # look what it says
 
     return
+
+
+def drive_finder():
+    """ Find all drive types then figure out which ones are removable usb """
+
+    '''drive_types = {
+        win32file.DRIVE_UNKNOWN: "Unknown\nDrive type can't be determined.",
+        win32file.DRIVE_REMOVABLE: "Removable\nDrive has removable media. This includes all floppy drives and many "
+                                   "other varieties of storage devices.",
+        win32file.DRIVE_FIXED: "Fixed\nDrive has fixed (nonremovable) media. This includes all hard drives, including "
+                               "hard drives that are removable.",
+        win32file.DRIVE_REMOTE: "Remote\nNetwork drives. This includes drives shared anywhere on a network.",
+        win32file.DRIVE_CDROM: "CDROM\nDrive is a CD-ROM. No distinction is made between read-only and read/write"
+                               " CD-ROM drives.",
+        win32file.DRIVE_RAMDISK: "RAMDisk\nDrive is a block of random access memory (RAM) on the local computer that "
+                                 "behaves like a disk drive.",
+        win32file.DRIVE_NO_ROOT_DIR: "The root directory does not exist."
+    }'''
+
+    # global destroot
+
+    drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
+
+    removable_count = 0
+    removable_volumes = {}
+
+    for device in drives:
+        what_type = win32file.GetDriveType(device)
+        # print("What type is: ", what_type)
+
+        if what_type == 2:
+            removable_count += 1
+            device_name = (win32api.GetVolumeInformation(device))
+            device_name = str(device_name[0])
+            removable_volumes.update({device: device_name})
+
+            # print("There are %i" % removable_count)
+            # print("List of removable drives are ", removable_volumes)
+
+    print("\nAvailable USB drives are: ", removable_volumes)
+    string_cleaner(removable_volumes)
+    drive_letter_to_use = input("\nEnter Drive letter: ")
+
+    # os.system('pause')
+
+    destroot = drive_letter_to_use + r':\Temp\LOGCAPTURE'
+
+    return destroot
+
 
 def find_logs():
     """ Get lists of file paths that matches pattern """
@@ -59,6 +108,23 @@ def find_logs():
         file_list.extend(i)
 
     return file_list
+
+
+def string_cleaner(temp_dict):
+    """ Routine to strip brackets, parens, extra commas, etc from string buffer before writing to csv file """
+
+    # Strip brackets, single quotes, parens from buffer. Matplotlib seems to send data with commas at the end.
+    # tempstring = (str(temp_string_buffer).translate(str.maketrans({'[': '', ']': '', '\'': '', ')': '', '(': ''})))
+
+    tempstring = str(temp_dict)
+    tempstring = re.sub(r'\\', ',', tempstring)  # Remove double backslashes
+    tempstring = re.sub(r',:', '', tempstring)  # Remove Trailing colon
+    temp_dict = list(tempstring)
+    print("Temp_dict: ", temp_dict)
+
+    # return tempstring
+    return
+
 
 def cleaner():
     """ Remove log files """
@@ -85,10 +151,11 @@ def cleaner():
 
     return file_list
 
-def download():
+
+def download(destroot):
     """ Download log files to D: USB stick """
 
-    clear_destination()  # Remove existing .log files in the destination
+    clear_destination(destroot)  # Remove existing .log files in the destination
 
     file_list = find_logs()
 
@@ -101,8 +168,9 @@ def download():
         os.makedirs(destpath, exist_ok=True)
         shutil.copy(full_file_name, destpath)
         print(full_file_name)
-    print("\n" + str(len(file_list)) + " files downloaded to (" + destroot + ") also remaining on server.")
+    print("\n" + str(len(file_list)) + " files downloaded to (" + destroot + ") but still remain on the server.")
     print("To delete the log files on the server, run: " + __file__ + " clean")
+
     return
 
 
@@ -111,9 +179,13 @@ def main():
     choice = command_line_arguments()
 
     if choice.action == "clean":
+        # drive_finder()
         cleaner()
+        exit(0)
     elif choice.action == "download":
-        download()
+        destination = drive_finder()
+        download(destination)
+        exit(0)
 
 
 if __name__ == '__main__':
