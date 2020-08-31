@@ -5,6 +5,8 @@ import os
 import win32api
 import win32file
 import re
+from pick import pick
+
 
 # global destroot
 
@@ -74,17 +76,18 @@ def drive_finder():
             device_name = (win32api.GetVolumeInformation(device))
             device_name = str(device_name[0])
             removable_volumes.update({device: device_name})
-
-            # print("There are %i" % removable_count)
-            # print("List of removable drives are ", removable_volumes)
+            values = list(removable_volumes.keys())
 
     print("\nAvailable USB drives are: ", removable_volumes)
-    string_cleaner(removable_volumes)
-    drive_letter_to_use = input("\nEnter Drive letter: ")
+
+    title = 'Please choose Drive to write logs to:  '
+    value, index = pick(values, title, min_selection_count=1, indicator='=>')
+    # print(value)
+    # print(index)
 
     # os.system('pause')
 
-    destroot = drive_letter_to_use + r':\Temp\LOGCAPTURE'
+    destroot = value + r'Temp\LOGCAPTURE'
 
     return destroot
 
@@ -110,7 +113,7 @@ def find_logs():
     return file_list
 
 
-def string_cleaner(temp_dict):
+'''def string_cleaner(temp_dict):
     """ Routine to strip brackets, parens, extra commas, etc from string buffer before writing to csv file """
 
     # Strip brackets, single quotes, parens from buffer. Matplotlib seems to send data with commas at the end.
@@ -124,7 +127,7 @@ def string_cleaner(temp_dict):
 
     # return tempstring
     return
-
+'''
 
 def cleaner():
     """ Remove log files """
