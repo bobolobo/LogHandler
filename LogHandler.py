@@ -4,8 +4,8 @@ import shutil
 import os
 import win32api
 import win32file
-import re
 from pick import pick
+from sys import exit  # So Exit works after pyinstaller freezing
 
 
 def command_line_arguments():
@@ -73,7 +73,7 @@ def drive_finder():
             removable_volumes.update({device: device_name})
             values = list(removable_volumes.keys())
 
-    print("\nAvailable USB drives are: ", removable_volumes)
+    print("\n\n\nAvailable USB drives are: ", removable_volumes)
 
     values.append('Exit with no pick')  # Add exit option if user changes mind.
     title = 'Please choose Drive to write logs to ' + str(removable_volumes) + ': '
