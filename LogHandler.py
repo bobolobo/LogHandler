@@ -8,9 +8,6 @@ import re
 from pick import pick
 
 
-# global destroot
-
-
 def command_line_arguments():
     """Read and evaluate commandline arguments, returns the single commandline argument"""
 
@@ -60,8 +57,6 @@ def drive_finder():
         win32file.DRIVE_NO_ROOT_DIR: "The root directory does not exist."
     }'''
 
-    # global destroot
-
     drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
 
     removable_count = 0
@@ -80,16 +75,18 @@ def drive_finder():
 
     print("\nAvailable USB drives are: ", removable_volumes)
 
-    title = 'Please choose Drive to write logs to:  '
-    value, index = pick(values, title, min_selection_count=1, indicator='=>')
-    # print(value)
-    # print(index)
+    values.append('Exit with no pick')  # Add exit option if user changes mind.
+    title = 'Please choose Drive to write logs to ' + str(removable_volumes) + ': '
+    value, index = pick(values, title, indicator='=>')
 
-    # os.system('pause')
+    if value != 'Exit with no pick':
+        destroot = value + r'Temp\LOGCAPTURE'
+        return destroot
+    else:
+        print("\nExiting with no action based on user selection.")
+        exit(1)
 
-    destroot = value + r'Temp\LOGCAPTURE'
-
-    return destroot
+    return
 
 
 def find_logs():
@@ -184,11 +181,9 @@ def main():
     if choice.action == "clean":
         # drive_finder()
         cleaner()
-        exit(0)
     elif choice.action == "download":
         destination = drive_finder()
         download(destination)
-        exit(0)
 
 
 if __name__ == '__main__':
