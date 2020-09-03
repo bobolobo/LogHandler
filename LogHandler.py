@@ -97,6 +97,7 @@ def find_logs():
                          r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*',
                          r'/STIP/*.log*',
                          r'/ECAT/BioFDRS/*.xml*',
+                         r'/ECAT/FDRS/*.xml*',
                          r'/Program Files/IDEMIA/Cameras/First/*.log*',
                          r'/Program Files/IDEMIA/Cameras/Second/*.log*']
 
