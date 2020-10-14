@@ -92,9 +92,13 @@ def drive_finder():
 def find_logs():
     """ Get lists of file paths that matches pattern """
 
-    file_list_targets = [r'/Program Files/IDEMIA/MFace Flex IAP/log/*.log*',
-                         r'/Program Files/IDEMIA/MFace Flex IS/log/*.log*',
-                         r'/Program Files/IDEMIA/MFace Flex WS/logs/*.log*',
+    file_list_targets = [r'/Program Files/IDEMIA/MFace Flex IA/first/log/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex IA/first/log/archive/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex IA/second/log/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex IA/second/log/archive/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex IPS/log/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex IPS/log/archive/*.log*',
+                         r'/Program Files/IDEMIA/MFace Flex MS/logs/*.log*',
                          r'/STIP/*.log*',
                          r'/ECAT/BioFDRS/*.xml*',
                          r'/ECAT/FDRS/*.xml*',
