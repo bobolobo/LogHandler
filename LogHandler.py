@@ -99,6 +99,9 @@ def find_logs():
                          r'/Program Files/IDEMIA/MFace Flex IPS/log/*.log*',
                          r'/Program Files/IDEMIA/MFace Flex IPS/log/archive/*.log*',
                          r'/Program Files/IDEMIA/MFace Flex MS/logs/*.log*',
+                         r'/Program Files (x86)/IDEMIA/DocAuth/logs/*.log*',
+                         r'/Temp/*.log*',
+                         r'/Temp/*.csv*',
                          r'/STIP/*.log*',
                          r'/ECAT/BioFDRS/*.xml*',
                          r'/ECAT/FDRS/*.xml*',
@@ -114,22 +117,6 @@ def find_logs():
 
     return file_list
 
-
-'''def string_cleaner(temp_dict):
-    """ Routine to strip brackets, parens, extra commas, etc from string buffer before writing to csv file """
-
-    # Strip brackets, single quotes, parens from buffer. Matplotlib seems to send data with commas at the end.
-    # tempstring = (str(temp_string_buffer).translate(str.maketrans({'[': '', ']': '', '\'': '', ')': '', '(': ''})))
-
-    tempstring = str(temp_dict)
-    tempstring = re.sub(r'\\', ',', tempstring)  # Remove double backslashes
-    tempstring = re.sub(r',:', '', tempstring)  # Remove Trailing colon
-    temp_dict = list(tempstring)
-    print("Temp_dict: ", temp_dict)
-
-    # return tempstring
-    return
-'''
 
 def cleaner():
     """ Remove log files """
