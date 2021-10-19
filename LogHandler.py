@@ -2,8 +2,8 @@ import argparse
 import glob
 import shutil
 import os
-import win32api
-import win32file
+import win32api  # To install "pip pywin32"
+import win32file  # To install "pip pywin32"
 from pick import pick
 from sys import exit  # So Exit works after pyinstaller freezing
 
@@ -61,6 +61,7 @@ def drive_finder():
 
     removable_count = 0
     removable_volumes = {}
+    values = []  # Initialize list of removable drives because code will exit if there is no drive attached
 
     for device in drives:
         what_type = win32file.GetDriveType(device)
