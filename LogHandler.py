@@ -74,18 +74,22 @@ def drive_finder():
             removable_volumes.update({device: device_name})
             values = list(removable_volumes.keys())
 
-    print("\n\n\nAvailable USB drives are: ", removable_volumes)
+    # print("\n\n\nAvailable USB drives are: ", removable_volumes)
 
-    values.append('Exit with no pick')  # Add exit option if user changes mind.
-    title = 'Please choose Drive to write logs to ' + str(removable_volumes) + ': '
-    value, index = pick(values, title, indicator='=>')
-
-    if value != 'Exit with no pick':
-        destroot = value + r'Temp\LOGCAPTURE'
-        return destroot
+    if not values:
+        print("\n\n\nNo USB Drives are available. Did you forget to plug one in?")
+        destroot = ""  # No USB drive so return a blank.
     else:
-        print("\nExiting with no action based on user selection.")
-        exit(1)
+        values.append('Exit with no pick')  # Add exit option if user changes mind.
+        title = 'Please choose Drive to write logs to ' + str(removable_volumes) + ': '
+        value, index = pick(values, title, indicator='=>')
+
+        if value != 'Exit with no pick':
+            destroot = value + r'Temp\LOGCAPTURE'
+            return destroot
+        else:
+            print("\nExiting with no action based on user selection.")
+            exit(1)
 
     return
 
@@ -147,6 +151,9 @@ def cleaner():
 
 def download(destroot):
     """ Download log files to D: USB stick """
+
+    if destroot is None:
+        return
 
     clear_destination(destroot)  # Remove existing .log files in the destination
 
